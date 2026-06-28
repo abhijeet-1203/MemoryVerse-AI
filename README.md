@@ -25,6 +25,59 @@ MemoryVerse AI solves this problem by using AI to:
 
 ---
 
+## 🛠️ Tech Stack
+
+### Platform
+- Lemma Pod
+
+### AI Components
+- Lemma AI Agents
+- Memory Chat Agent
+- Memory Extractor Agent
+
+### Workflows
+- Lemma Workflows
+- Document Ingestion Workflow
+
+### Serverless Functions
+- Upload Document
+- Parse Document
+- Persist Extraction
+- Regenerate Timeline
+- Authentication Functions
+
+### Data Storage
+- Lemma Tables
+
+### Database Tables
+- Documents
+- Skills
+- Projects
+- Certifications
+- Internships
+- Education
+- Organizations
+- Achievements
+- Relationships
+- Timeline Events
+- Embeddings
+- Profiles
+- Conversations
+- Sessions
+- Audit Logs
+
+### AI Capabilities
+- Document Parsing
+- Entity Extraction
+- Knowledge Graph Generation
+- Timeline Generation
+- Semantic Retrieval
+- Conversational AI
+
+### Deployment
+- Lemma Apps
+
+  
 # ✨ Features
 
 ## 📂 AI Document Ingestion
