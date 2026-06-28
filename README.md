@@ -1,475 +1,377 @@
 # 🚀 MemoryVerse AI
 
-> **"I never have to search through folders again."**
+> **An AI-Powered Digital Identity System that understands your journey, not just your files.**
 
-MemoryVerse AI is an AI-powered Digital Identity System that transforms scattered academic and professional documents into a structured, searchable, and intelligent knowledge repository.
+MemoryVerse AI is an intelligent knowledge repository that automatically organizes, connects, and retrieves a student's academic and professional documents. Instead of manually managing folders, users can upload documents once and instantly access them using natural language.
 
-Unlike traditional cloud storage, MemoryVerse AI understands your journey by automatically organizing files, extracting meaningful information, building relationships between achievements, and enabling natural language search.
-
----
-
-# 📌 Problem Statement
-
-Students accumulate hundreds of documents throughout their academic journey:
-
-- 📜 Certificates
-- 📄 Resumes
-- 💼 Internship Letters
-- 📚 Project Reports
-- 🏆 Achievements
-- 💻 GitHub Repositories
-- 🌐 Portfolio Links
-- 🎓 Academic Documents
-
-These files are often scattered across:
-
-- Google Drive
-- Email Attachments
-- Downloads Folder
-- Cloud Storage
-- Different Devices
-
-Traditional storage platforms can save files but cannot understand a person's journey.
-
-MemoryVerse AI solves this by creating an intelligent digital identity that understands, connects, and retrieves information instantly.
+Built for the **Wooble AI Hackathon**, MemoryVerse AI transforms scattered certificates, resumes, internship letters, project reports, achievements, and portfolios into a structured digital identity.
 
 ---
 
-# 🎯 Features
+# 📖 Overview
 
-## 📂 AI Data Ingestion
+Every student builds a digital footprint throughout their academic journey. Certificates, resumes, internship letters, project reports, achievements, and learning records accumulate over time across multiple folders, cloud drives, and devices.
 
-Upload various document types including:
+Traditional storage platforms can save files, but they cannot understand the relationships between them.
 
-- PDF
-- DOCX
-- Images
-- Certificates
-- Resume
-- Internship Letters
-- Project Reports
-- Portfolio Links
+MemoryVerse AI solves this problem by using AI to:
 
-The AI automatically extracts:
-
-- Text
-- Skills
-- Organizations
-- Dates
-- Technologies
-- Roles
-- Achievements
+* Extract meaningful information from uploaded documents.
+* Automatically categorize content.
+* Build relationships between skills, certifications, projects, internships, and achievements.
+* Generate a chronological journey timeline.
+* Enable semantic search using natural language.
+* Preserve original documents while making them instantly accessible.
 
 ---
 
-## 🧠 Intelligent Categorization
+# ✨ Features
 
-Automatically classifies uploaded documents into categories such as:
+## 📂 AI Document Ingestion
 
-- Projects
-- Certifications
-- Skills
-- Internships
-- Achievements
-- Academics
-- Resume
-- Portfolio
+Users can upload:
 
-No manual sorting required.
+* Certificates
+* Resumes
+* Project Reports
+* Internship Letters
+* Academic Documents
+* Portfolio Links
+* GitHub Links
+* Images
+* PDFs
+* DOCX Files
+* PPT/PPTX Files
+
+The ingestion workflow automatically extracts document content and metadata for further processing.
+
+---
+
+## 🧠 Intelligent Information Extraction
+
+MemoryVerse AI analyzes uploaded documents to identify:
+
+* Skills
+* Projects
+* Certifications
+* Internships
+* Education
+* Organizations
+* Achievements
+* Dates
+* Technologies
+* Roles
+
+This extracted information becomes part of the user's digital identity.
+
+---
+
+## 📚 Automatic Categorization
+
+Documents are automatically classified into structured categories such as:
+
+* Certifications
+* Projects
+* Skills
+* Internships
+* Achievements
+* Academics
+* Organizations
+* Education
+
+No manual sorting is required.
 
 ---
 
 ## 🔗 Relationship Engine
 
-MemoryVerse AI builds meaningful relationships between extracted information.
+The platform connects extracted entities to build a meaningful knowledge graph.
 
-Example:
+Examples:
 
-```
-Certification
-      ↓
-Skill
-      ↓
-Project
-      ↓
-Internship
-      ↓
-Career Growth
-```
+* Certification → Skill
+* Skill → Project
+* Project → Internship
+* Internship → Organization
+* Organization → Career Journey
 
-Relationships include:
-
-- Certification → Skill
-- Skill → Project
-- Project → Internship
-- Internship → Career Path
+These relationships help users understand how their experiences are connected over time.
 
 ---
 
-## 📈 Digital Journey Timeline
+## 📅 Digital Journey Timeline
 
-Automatically creates a visual timeline of academic and professional growth.
+MemoryVerse AI automatically generates a timeline of the user's academic and professional growth.
 
 Example:
 
 ```
 2023
-│
 ├── Python Certification
-│
+
 2024
-│
-├── Web Development Project
-├── Coding Club Member
-│
+├── Full Stack Development Project
+├── Data Structures Course
+
 2025
-│
 ├── AI Internship
 ├── Machine Learning Certification
-│
+
 2026
-│
 ├── MemoryVerse AI
 ```
 
----
-
-## 🔍 Smart Retrieval System
-
-Search naturally without remembering filenames.
-
-Examples:
-
-```
-Show my certificates
-
-Show AI projects
-
-Show internship documents
-
-Show my latest resume
-
-Find projects using Python
-
-Show Machine Learning achievements
-```
-
-The AI understands intent and retrieves the original document instantly.
+The timeline updates automatically whenever new documents are uploaded.
 
 ---
 
-# 🤖 AI Workflow
+## 🔍 Smart Semantic Search
+
+Instead of searching through folders, users can simply ask:
+
+* Show all my certificates
+* Show AI projects
+* Show internship documents
+* Show my latest resume
+* Find projects using Python
+* Show my achievements
+* What certifications do I have?
+
+The system retrieves the most relevant information along with the original uploaded documents.
+
+---
+
+# 🏗 System Architecture
 
 ```
-User Uploads Document
-          │
-          ▼
- OCR / Text Extraction
-          │
-          ▼
- NLP Entity Recognition
-          │
-          ▼
- Metadata Extraction
-          │
-          ▼
- Intelligent Categorization
-          │
-          ▼
- Embedding Generation
-          │
-          ▼
- Vector Database Storage
-          │
-          ▼
- Relationship Engine
-          │
-          ▼
- Semantic Search + RAG
-          │
-          ▼
- Natural Language Response
+                     Upload Document
+                            │
+                            ▼
+                  Document Parser
+                            │
+                            ▼
+                Information Extraction
+                            │
+                            ▼
+               Entity Identification
+                            │
+                            ▼
+             Categorization & Storage
+                            │
+                            ▼
+              Relationship Generation
+                            │
+                            ▼
+                 Timeline Generation
+                            │
+                            ▼
+             Semantic Search & Retrieval
 ```
 
 ---
 
-# 🏗️ System Architecture
+# ⚙ Workflow
+
+MemoryVerse AI follows an automated ingestion pipeline.
 
 ```
-                    User
-                      │
-                      ▼
-              Upload Documents
-                      │
-      ┌───────────────┴───────────────┐
-      │                               │
-      ▼                               ▼
- OCR/Text Extraction          Metadata Extraction
-      │                               │
-      └───────────────┬───────────────┘
-                      ▼
-            NLP Entity Recognition
-                      │
-                      ▼
-         Automatic Categorization
-                      │
-                      ▼
-          Embedding Generation
-                      │
-                      ▼
-             Vector Database
-                      │
-                      ▼
-            Relationship Engine
-                      │
-                      ▼
-          Semantic Search (RAG)
-                      │
-                      ▼
-        Original Document Retrieval
+Upload
+   │
+   ▼
+Parse Document
+   │
+   ▼
+Extract Metadata
+   │
+   ▼
+Store Structured Information
+   │
+   ▼
+Generate Relationships
+   │
+   ▼
+Regenerate Timeline
+   │
+   ▼
+Ready for Semantic Search
 ```
 
 ---
 
-# 🛠️ Tech Stack
-
-## Frontend
-
-- React.js
-- Tailwind CSS
-- Vite
-
-## Backend
-
-- Node.js
-- Express.js
-
-## AI & ML
-
-- LangChain
-- OpenAI / Gemini API
-- Hugging Face
-- Sentence Transformers
-- OCR (Tesseract / Google Vision)
-
-## Database
-
-- MongoDB
-
-## Vector Database
-
-- FAISS
-- Pinecone
-- ChromaDB
-
----
-
-# 🧠 AI Components
-
-## NLP (Natural Language Processing)
-
-Extracts:
-
-- Skills
-- Organizations
-- Dates
-- Technologies
-- Education
-- Certifications
-- Roles
-
----
-
-## Embeddings
-
-Every uploaded document is converted into vector embeddings.
-
-Benefits:
-
-- Semantic Search
-- Similarity Matching
-- Context Retrieval
-
----
-
-## Retrieval-Augmented Generation (RAG)
-
-Instead of generating answers from memory, MemoryVerse AI retrieves relevant documents first and then generates responses grounded in those documents.
-
-Benefits:
-
-- Personalized responses
-- Higher accuracy
-- Reduced hallucinations
-
----
-
-## Semantic Search
-
-Supports natural language queries such as:
+# 📂 Project Structure
 
 ```
-Show my AI certificates
+MemoryVerse AI
 
-Find React projects
-
-Show internship documents
-
-Latest resume
-
-Python achievements
-
-Machine Learning projects
-```
-
----
-
-# 📁 Project Structure
-
-```
-MemoryVerse-AI/
-
-├── frontend/
-├── backend/
-├── uploads/
-├── models/
-├── routes/
-├── services/
-├── database/
-├── vector_store/
-├── ai/
-├── public/
+├── agents/
+│   ├── memory_chat_agent
+│   ├── memory_extractor
+│   └── connector-quiet-check
+│
+├── apps/
+│   ├── memoryverse_app
+│   └── job-connectors
+│
+├── workflows/
+│   └── ingest_document
+│
+├── functions/
+│   ├── upload_document
+│   ├── parse_document
+│   ├── persist_extraction
+│   ├── regenerate_timeline
+│   ├── auth_login
+│   ├── auth_logout
+│   ├── auth_get_session
+│   └── auth_setup_profile
+│
+├── tables/
+│   ├── profiles
+│   ├── documents
+│   ├── skills
+│   ├── projects
+│   ├── certifications
+│   ├── internships
+│   ├── education
+│   ├── achievements
+│   ├── organizations
+│   ├── relationships
+│   ├── timeline_events
+│   ├── embeddings
+│   ├── conversations
+│   ├── conversation_messages
+│   ├── sessions
+│   └── audit_logs
+│
 └── README.md
 ```
 
 ---
 
-# ⚙️ Installation
+# 🗄 Database Design
 
-Clone the repository
+The project maintains structured data using dedicated tables:
 
-```bash
-git clone https://github.com/your-username/MemoryVerse-AI.git
-```
-
-Move into the project
-
-```bash
-cd MemoryVerse-AI
-```
-
-Install frontend dependencies
-
-```bash
-npm install
-```
-
-Install backend dependencies
-
-```bash
-cd backend
-npm install
-```
-
-Start backend
-
-```bash
-npm run dev
-```
-
-Start frontend
-
-```bash
-npm run dev
-```
+| Table                 | Purpose                          |
+| --------------------- | -------------------------------- |
+| profiles              | User profile information         |
+| documents             | Uploaded document metadata       |
+| skills                | Extracted skills                 |
+| projects              | User projects                    |
+| certifications        | Certificates and credentials     |
+| internships           | Internship records               |
+| education             | Academic history                 |
+| achievements          | Awards and accomplishments       |
+| organizations         | Companies and institutions       |
+| relationships         | Links between extracted entities |
+| timeline_events       | Career timeline                  |
+| embeddings            | Semantic embeddings              |
+| conversations         | Chat sessions                    |
+| conversation_messages | User conversations               |
+| sessions              | Authentication sessions          |
+| audit_logs            | System activity logs             |
 
 ---
 
-# 🚀 Usage
+# 🤖 AI Components
 
-1. Upload your academic or professional documents.
-2. AI extracts metadata and important information.
-3. Documents are automatically categorized.
-4. Relationships between skills, projects, certifications, and internships are created.
-5. Ask questions in natural language.
-6. Retrieve original documents instantly.
+MemoryVerse AI integrates multiple AI capabilities:
+
+* Intelligent document parsing
+* Information extraction
+* Entity recognition
+* Relationship generation
+* Timeline creation
+* Semantic retrieval
+* Conversational memory assistant
 
 ---
 
-# 💬 Example Queries
+# 🚀 Core Functions
+
+### upload_document
+
+Handles user uploads including PDFs, DOCX, PPTX, images, and URLs.
+
+### parse_document
+
+Extracts textual content and metadata from uploaded documents.
+
+### persist_extraction
+
+Stores extracted entities into structured database tables.
+
+### regenerate_timeline
+
+Automatically rebuilds the user's career and academic timeline whenever new information is added.
+
+### memory_chat_agent
+
+Provides conversational access to the user's digital identity.
+
+### memory_extractor
+
+Processes uploaded content and identifies structured information.
+
+---
+
+# 💡 Example Queries
+
+Users can ask:
 
 ```
 Show all my certificates
 
-Show my AI projects
-
 Show internship letters
+
+Find projects related to AI
 
 Show my latest resume
 
-Find projects using Python
+Which certifications teach Python?
 
-What skills do I have?
+What skills have I learned?
 
-Show achievements from 2025
+Show my academic achievements
 
-Find Machine Learning certifications
+List all organizations I have worked with
 ```
 
 ---
 
-# 🌟 Future Scope
+# 🎯 Hackathon Requirements Covered
 
-- 🎙️ Voice-based Search
-- 📄 AI Resume Generator
-- 💼 Job Recommendation System
-- 🔗 LinkedIn Integration
-- 💻 GitHub Sync
-- 📊 Skill Gap Analysis
-- 🎯 Career Roadmap Generator
-- 📱 Mobile Application
-- 🤖 AI Career Assistant
-
----
-
-# 🎯 Why MemoryVerse AI?
-
-Unlike traditional cloud storage, MemoryVerse AI:
-
-✅ Understands documents instead of just storing them.
-
-✅ Automatically organizes information.
-
-✅ Builds meaningful relationships between experiences.
-
-✅ Enables semantic search using AI.
-
-✅ Preserves original documents while making them instantly accessible.
-
-✅ Represents a student's complete academic and professional journey.
+| Requirement                     | Status |
+| ------------------------------- | ------ |
+| AI Data Ingestion               | ✅      |
+| Intelligent Categorization      | ✅      |
+| Relationship Engine             | ✅      |
+| Digital Journey Timeline        | ✅      |
+| Smart Retrieval                 | ✅      |
+| Original File Preservation      | ✅      |
+| AI-powered Knowledge Repository | ✅      |
 
 ---
 
-# 📊 Hackathon Evaluation Mapping
+# 🔮 Future Enhancements
 
-| Requirement | Our Solution |
-|------------|-------------|
-| AI Data Ingestion | OCR + NLP based extraction from uploaded documents |
-| Intelligent Categorization | Automatic document classification |
-| Relationship Engine | AI-powered knowledge graph connecting skills, projects, certifications, internships |
-| Digital Journey Timeline | Chronological visualization of growth |
-| Smart Retrieval | Semantic Search + RAG |
-| NLP | Entity Extraction |
-| Embeddings | Sentence Transformers |
-| Vector Database | FAISS / ChromaDB / Pinecone |
-| Semantic Search | Natural Language Query Processing |
+* OCR support for handwritten documents
+* LinkedIn synchronization
+* GitHub repository analysis
+* Resume generation
+* Career recommendation engine
+* Skill-gap analysis
+* Mobile application
+* Voice-enabled search
+* AI career mentor
 
 ---
 
-# 👨‍💻 Team
+# ❤️ Why MemoryVerse AI?
 
-Built with ❤️
+MemoryVerse AI goes beyond document storage. It creates a living digital identity that understands a student's achievements, skills, projects, and experiences. By connecting fragmented information into a searchable knowledge graph, it empowers users to rediscover their journey instantly without ever searching through folders again.
 
-**MemoryVerse AI** is more than a document storage platform—it's an intelligent digital identity that understands, organizes, and showcases a student's complete academic and professional journey.
+---
 
-> **"From scattered files to a connected digital identity."**
+
+> **"From scattered files to an intelligent digital identity."**
