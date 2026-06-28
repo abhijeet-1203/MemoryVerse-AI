@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Job connector tracker</title>
+<style>
+  :root {
+    --bg: #f7f5ef;
+    --surface: #ffffff;
+    --ink: #1d1f23;
+    --ink-muted: #6b6a64;
+    --ink-faint: #a09d92;
+    --rule: #e8e5dd;
+    --rule-strong: #d9d4c6;
+    --amber: #b58a3a;
+    --amber-soft: #f1e7d3;
+    --tint-applied: #e7eef5;   --tint-applied-ink: #4f6a86;
+    --tint-screen:  #ece9f1;   --tint-screen-ink:  #6e638a;
+    --tint-onsite:  #e9eed7;   --tint-onsite-ink:  #6e7a35;
+    --tint-offer:   #dcebc9;   --tint-offer-ink:   #4d6b1f;
+    --tint-rejected:#ede9e6;   --tint-rejected-ink:#8a7f78;
+    --serif: "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
+    --sans:  -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body { font-family: var(--sans); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  main { max-width: 880px; margin: 0 auto; padding: 64px 32px 96px; }
+
+  header.app-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 500; font-size: 28px; letter-spacing: -0.01em;
+    margin: 0; color: var(--ink);
+  }
+  .sub { color: var(--ink-muted); margin-top: 4px; font-size: 13.5px; }
+
+  button.check {
+    font: inherit; font-size: 13px;
+    color: var(--ink); background: var(--surface);
+    border: 1px solid var(--rule-strong); border-radius: 999px;
+    padding: 8px 16px; cursor: pointer; transition: background .15s ease;
+  }
+  button.check:hover { background: #f1ede1; }
+  button.check[disabled] { color: var(--ink-faint); cursor: progress; }
+
+  .quiet-panel {
+    margin: 24px 0 32px; background: var(--surface);
+    border: 1px solid var(--rule); border-left: 3px solid var(--amber);
+    border-radius: 4px; padding: 18px 22px 20px;
+  }
+  .quiet-panel h2 {
+    font-family: var(--serif); font-weight: 500; font-size: 16px; margin: 0 0 10px;
+    color: var(--ink);
+  }
+  .quiet-panel .muted { color: var(--ink-muted); font-size: 13px; }
+  .quiet-panel .answer { font-size: 14px; line-height: 1.55; color: var(--ink); white-space: pre-wrap; }
+  .quiet-panel .quiet-loading { color: var(--ink-muted); font-style: italic; }
+  .quiet-panel .quiet-error { color: #8a3a3a; }
+
+  .stats {
+    display: flex; gap: 12px; flex-wrap: wrap; margin: 28px 0 24px;
+    padding-bottom: 20px; border-bottom: 1px solid var(--rule);
+  }
+  .stat {
+    display: inline-flex; align-items: baseline; gap: 6px;
+    font-size: 13px; color: var(--ink-muted);
+  }
+  .stat .n {
+    font-family: var(--serif); font-feature-settings: "tnum";
+    font-size: 22px; color: var(--ink); font-weight: 500;
+  }
+  .stat.quiet .n { color: var(--amber); }
+
+  .group { margin-top: 36px; }
+  .group h2 {
+    font-family: var(--serif); font-weight: 500; font-size: 14px; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--ink-muted);
+    margin: 0 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--rule);
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .group h2 .count { font-size: 12px; color: var(--ink-faint); font-family: var(--sans); }
+
+  .connector {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr 0.9fr;
+    gap: 12px 24px;
+    padding: 16px 14px;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+  }
+  .connector:last-child { border-bottom: none; }
+  .connector .who { display: flex; flex-direction: column; gap: 2px; }
+  .connector .company {
+    font-family: var(--serif); font-weight: 500; font-size: 16px; color: var(--ink);
+  }
+  .connector .role { color: var(--ink-muted); font-size: 13.5px; }
+  .connector .next {
+    color: var(--ink); font-size: 13.5px; line-height: 1.45;
+  }
+  .connector .next.empty { color: var(--ink-faint); font-style: italic; }
+  .connector .right { text-align: right; }
+  .connector .connector-name { color: var(--ink-muted); font-size: 13px; }
+  .connector .contact-time {
+    font-feature-settings: "tnum";
+    font-size: 12.5px; color: var(--ink-muted); margin-top: 4px;
+  }
+  .connector .contact-time.stale { color: var(--amber); }
+  .connector .contact-time.never { color: var(--ink-faint); font-style: italic; }
+  .connector.quiet { background: var(--amber-soft); border-radius: 3px; }
+  .connector.quiet { box-shadow: inset 3px 0 0 var(--amber); padding-left: 12px; }
+
+  .badge {
+    display: inline-block; font-size: 11.5px;
+    padding: 2px 8px; border-radius: 999px;
+    font-weight: 500; letter-spacing: 0.02em;
+    background: var(--tint-applied); color: var(--tint-applied-ink);
+    margin-right: 8px; vertical-align: 2px;
+  }
+  .badge[data-stage="screen"]   { background: var(--tint-screen);  color: var(--tint-screen-ink); }
+  .badge[data-stage="onsite"]   { background: var(--tint-onsite);  color: var(--tint-onsite-ink); }
+  .badge[data-stage="offer"]    { background: var(--tint-offer);   color: var(--tint-offer-ink); }
+  .badge[data-stage="rejected"] { background: var(--tint-rejected);color: var(--tint-rejected-ink); }
+
+  .empty {
+    text-align: center; color: var(--ink-muted);
+    padding: 64px 0; font-size: 14px;
+  }
+
+  @media (max-width: 720px) {
+    main { padding: 36px 18px 64px; }
+    header.app-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .connector {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 6px;
+    }
+    .connector .right { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="app-head">
+    <div>
+      <h1>Job connector tracker</h1>
+      <div class="sub">Where each conversation stands, and what to do next.</div>
+    </div>
+    <button class="check" id="check-quiet" type="button">Check for quiet connectors</button>
+  </header>
+
+  <section class="quiet-panel" id="quiet-panel" hidden>
+    <h2>Quiet-check report</h2>
+    <div id="quiet-panel-body">
+      <div class="muted quiet-loading">asking the quiet-check…</div>
+    </div>
+  </section>
+
+  <div class="stats" id="stats"></div>
+  <section class="connectors" id="connectors"></section>
+</main>
+
+<script>
+(function () {
+  var cfg = window.__LEMMA_CONFIG__ || {};
+  var base = (cfg.apiUrl || window.location.origin).replace(/\/$/, "");
+  var s = document.createElement("script");
+  s.src = base + "/public/sdk/lemma-client.js";
+  s.onload = boot;
+  s.onerror = function () {
+    document.getElementById("connectors").innerHTML =
+      '<div class="empty">Could not load the Lemma client SDK.</div>';
+  };
+  document.head.appendChild(s);
+
+  var ACTIVE_STAGES = new Set(["applied", "screen", "onsite"]);
+  var QUIET_DAYS = 14;
+  var STAGE_ORDER = ["applied", "screen", "onsite", "offer", "rejected"];
+  var STAGE_LABELS = {
+    applied: "Applied",
+    screen: "Phone screen / Recruiter",
+    onsite: "Onsite / Final loop",
+    offer: "Offer",
+    rejected: "Closed"
+  };
+
+  async function boot() {
+    var client = new window.LemmaClient.LemmaClient();
+    var state = await client.initialize();
+    if (state.status !== "authenticated") client.auth.redirectToAuth();
+
+    await render(client);
+    bindQuietCheck(client);
+  }
+
+  async function getRows(client) {
+    var res = await client.records.list("job_connectors", {
+      limit: 200,
+      sort: [{ field: "last_contact_at", direction: "asc" }]
+    });
+    return (res && res.items) || [];
+  }
+
+  function daysSince(iso) {
+    if (!iso) return null;
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return null;
+    return Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
+  }
+
+  function formatContact(iso) {
+    var days = daysSince(iso);
+    if (days === null) return { text: "—", className: "never" };
+    if (days === 0) return { text: "today", className: "" };
+    if (days === 1) return { text: "1 day ago", className: "" };
+    return { text: days + " days ago", className: days > QUIET_DAYS ? "stale" : "" };
+  }
+
+  function isQuiet(row) {
+    if (!ACTIVE_STAGES.has(row.stage)) return false;
+    var days = daysSince(row.last_contact_at);
+    return days === null || days > QUIET_DAYS;
+  }
+
+  function renderStats(rows) {
+    var counts = { total: rows.length, applied: 0, screen: 0, onsite: 0, offer: 0, rejected: 0, quiet: 0 };
+    rows.forEach(function (r) {
+      if (counts[r.stage] !== undefined) counts[r.stage]++;
+      if (isQuiet(r)) counts.quiet++;
+    });
+    var html = "";
+    html += stat("Total", counts.total);
+    html += stat("Quiet", counts.quiet, "quiet");
+    STAGE_ORDER.forEach(function (s) {
+      html += stat(STAGE_LABELS[s], counts[s]);
+    });
+    document.getElementById("stats").innerHTML = html;
+  }
+  function stat(label, n, extra) {
+    return '<span class="stat' + (extra ? " " + extra : "") + '">'
+      + '<span class="n">' + n + '</span><span>' + escapeHtml(label) + '</span></span>';
+  }
+
+  function renderConnectors(rows) {
+    if (rows.length === 0) {
+      document.getElementById("connectors").innerHTML =
+        '<div class="empty">No connectors yet. Add one to begin.</div>';
+      return;
+    }
+    var byStage = {};
+    STAGE_ORDER.forEach(function (s) { byStage[s] = []; });
+    rows.forEach(function (r) {
+      if (byStage[r.stage]) byStage[r.stage].push(r);
+    });
+
+    var out = "";
+    STAGE_ORDER.forEach(function (stage) {
+      var list = byStage[stage];
+      if (!list.length) return;
+      out += '<section class="group">'
+        + '<h2>' + escapeHtml(STAGE_LABELS[stage])
+        + ' <span class="count">· ' + list.length + '</span></h2>';
+      list.forEach(function (row) {
+        out += renderRow(row);
+      });
+      out += '</section>';
+    });
+    document.getElementById("connectors").innerHTML = out;
+  }
+
+  function renderRow(row) {
+    var quiet = isQuiet(row);
+    var contact = formatContact(row.last_contact_at);
+    var connector = row.connector ? '<span class="connector-name">' + escapeHtml(row.connector) + '</span>'
+                                  : '<span class="connector-name" style="color:var(--ink-faint)">no connector</span>';
+    var next = row.next_action
+      ? '<span class="next">' + escapeHtml(row.next_action) + '</span>'
+      : '<span class="next empty">no next action set</span>';
+    return '<div class="connector' + (quiet ? ' quiet' : '') + '">'
+      + '<div class="who">'
+      +   '<span class="badge" data-stage="' + escapeAttr(row.stage) + '">' + escapeHtml(row.stage) + '</span>'
+      +   '<span class="company">' + escapeHtml(row.company) + '</span>'
+      +   '<span class="role">' + escapeHtml(row.role) + '</span>'
+      + '</div>'
+      + next
+      + '<div class="right">'
+      +   connector
+      +   '<div class="contact-time ' + contact.className + '">' + escapeHtml(contact.text) + '</div>'
+      + '</div>'
+      + '</div>';
+  }
+
+  async function render(client) {
+    try {
+      var rows = await getRows(client);
+      renderStats(rows);
+      renderConnectors(rows);
+    } catch (err) {
+      document.getElementById("connectors").innerHTML =
+        '<div class="empty">Could not load connectors.</div>';
+      console.error(err);
+    }
+  }
+
+  function bindQuietCheck(client) {
+    var btn = document.getElementById("check-quiet");
+    var panel = document.getElementById("quiet-panel");
+    var body = document.getElementById("quiet-panel-body");
+    btn.addEventListener("click", function () {
+      runQuietCheck(client, btn, panel, body);
+    });
+  }
+
+  async function runQuietCheck(client, btn, panel, body) {
+    btn.disabled = true;
+    panel.hidden = false;
+    body.innerHTML = '<div class="muted quiet-loading">asking the quiet-check…</div>';
+    try {
+      var conv = await client.agents.run(
+        "connector-quiet-check",
+        "Which connectors have gone quiet? Reply with the structured summary."
+      );
+      var answer = await pollFinalAnswer(client, conv.id, 45000);
+      var html = answer
+        ? '<div class="answer">' + escapeHtml(answer) + '</div>'
+        : '<div class="muted">No reply received.</div>';
+      body.innerHTML = html;
+    } catch (err) {
+      body.innerHTML = '<div class="quiet-error">Could not reach the quiet-check agent.</div>';
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function pollFinalAnswer(client, conversationId, timeoutMs) {
+    var deadline = Date.now() + timeoutMs;
+    var lastText = "";
+    while (Date.now() < deadline) {
+      var res = await client.conversations.messages.list(conversationId, { limit: 100 });
+      var messages = (res && res.items) || [];
+      messages.reverse(); // latest first
+      for (var i = 0; i < messages.length; i++) {
+        var m = messages[i];
+        if (m.role === "assistant") {
+          var md = m.metadata || {};
+          if (md.is_final_answer === true || md.isFinalAnswer === true) {
+            return (m.text || m.content || "").trim() || lastText;
+          }
+          if (m.text) lastText = m.text;
+        }
+      }
+      await sleep(900);
+    }
+    return lastText || null;
+  }
+
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  function escapeHtml(s) {
+    if (s === null || s === undefined) return "";
+    return String(s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+  function escapeAttr(s) { return escapeHtml(s); }
+})();
+</script>
+</body>
+</html>

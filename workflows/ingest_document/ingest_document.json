@@ -1,0 +1,140 @@
+{
+  "description": "Run a document through the full ingest pipeline: parse -> extract entities -> persist -> rebuild timeline.",
+  "edges": [
+    {
+      "id": "e_form_parse",
+      "label": null,
+      "source": "intake",
+      "target": "parse"
+    },
+    {
+      "id": "e_parse_load",
+      "label": null,
+      "source": "parse",
+      "target": "extract"
+    },
+    {
+      "id": "e_extract_persist",
+      "label": null,
+      "source": "extract",
+      "target": "persist"
+    },
+    {
+      "id": "e_persist_timeline",
+      "label": null,
+      "source": "persist",
+      "target": "timeline"
+    },
+    {
+      "id": "e_timeline_end",
+      "label": null,
+      "source": "timeline",
+      "target": "end"
+    }
+  ],
+  "icon_url": null,
+  "mode": "GLOBAL",
+  "name": "ingest_document",
+  "nodes": [
+    {
+      "config": {
+        "assignee_pod_member_id": null,
+        "assignee_pod_member_id_expression": null,
+        "input_schema": {
+          "properties": {
+            "document_id": {
+              "type": "string"
+            },
+            "document_title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "document_id"
+          ],
+          "type": "object"
+        },
+        "ui_schema": null
+      },
+      "id": "intake",
+      "label": "Document to ingest",
+      "position": null,
+      "type": "FORM"
+    },
+    {
+      "config": {
+        "function_name": "parse_document",
+        "input_mapping": {
+          "document_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "intake.document_id"
+          }
+        }
+      },
+      "id": "parse",
+      "label": "Parse & extract text",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "agent_name": "memory_extractor",
+        "input_mapping": {
+          "input": {
+            "optional": false,
+            "type": "expression",
+            "value": "concat('From document ', intake.document_id, ': run extract on its text.')"
+          }
+        }
+      },
+      "id": "extract",
+      "label": "Extract entities",
+      "position": null,
+      "type": "AGENT"
+    },
+    {
+      "config": {
+        "function_name": "persist_extraction",
+        "input_mapping": {
+          "document_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "intake.document_id"
+          },
+          "extraction": {
+            "optional": false,
+            "type": "expression",
+            "value": "extract"
+          }
+        }
+      },
+      "id": "persist",
+      "label": "Persist extracted entities",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "function_name": "regenerate_timeline",
+        "input_mapping": {}
+      },
+      "id": "timeline",
+      "label": "Rebuild timeline",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {},
+      "id": "end",
+      "label": "Done",
+      "position": null,
+      "type": "END"
+    }
+  ],
+  "start": {
+    "config": null,
+    "type": "MANUAL"
+  },
+  "visibility": "POD"
+}

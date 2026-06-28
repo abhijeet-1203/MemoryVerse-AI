@@ -1,0 +1,35 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "2e4c161ca662874d43282a7205ea50cc766aed3b53937914efa386b9b9a23636",
+  "config": null,
+  "description": "Read file's auto-converted markdown; write raw_text to documents row.",
+  "icon_url": null,
+  "name": "parse_document",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "documents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "audit_logs",
+        "resource_type": "datastore_table"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

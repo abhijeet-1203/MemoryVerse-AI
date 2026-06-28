@@ -1,0 +1,44 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "2cd3aac08be81a52389583e702c62759bf6af6a14cb72aa838162f676a22894f",
+  "config": null,
+  "description": "Verify password and issue a session token.",
+  "icon_url": null,
+  "name": "auth_login",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "profiles",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "sessions",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "audit_logs",
+        "resource_type": "datastore_table"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

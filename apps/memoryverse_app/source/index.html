@@ -1,0 +1,789 @@
+<!DOCTYPE html><html lang="en"><head><script data-lemma-runtime-config>window.__LEMMA_CONFIG__={"podId": "019efce1-8f43-75db-849c-842bbe0b6e4d", "apiUrl": "https://api.lemma.work", "authUrl": "https://lemma.work/auth", "timeoutMs": 240000, "maxRetries": 3};</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MemoryVerse AI</title>
+<style>
+  :root {
+    --bg: #0b0d12; --bg-2: #11141b; --panel: #161a22; --border: #1f2530;
+    --text: #e7eaf0; --text-dim: #8a93a6; --muted: #5d6678;
+    --accent: #7c5cff; --accent-2: #4cd9c6; --warn: #ffb74d; --error: #ff6b6b;
+    --green: #4cd9c6; --orange: #ff9f43;
+    --radius: 14px; --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background: var(--bg); color: var(--text);
+    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,system-ui,sans-serif;
+    line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  header { padding: 18px 28px; background: var(--bg-2); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; position: sticky; top:0; z-index: 5; }
+  header h1 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -0.4px; }
+  header .brand { display:flex; align-items:center; gap: 10px; }
+  header .brand .dot { width:10px; height:10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 12px var(--accent);}
+  header .user { font-size: 13px; color: var(--text-dim); display:flex; align-items: center; gap: 10px; }
+  header .user button { background: transparent; color: var(--text-dim); border: 1px solid var(--border);
+    padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
+  header .user button:hover { color: var(--text); border-color: var(--accent); }
+  nav { display:flex; gap: 4px; padding: 6px 28px; background: var(--bg-2); border-bottom: 1px solid var(--border); }
+  nav button { background: transparent; color: var(--text-dim); border: none; padding: 10px 16px;
+    border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; }
+  nav button:hover { color: var(--text); background: var(--panel); }
+  nav button.active { color: var(--accent); background: var(--panel); }
+  main { padding: 28px; max-width: 1100px; margin: 0 auto; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 18px; }
+  .panel h2 { margin: 0 0 14px; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+  .panel p.sub { margin: 0 0 18px; color: var(--text-dim); font-size: 14px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stat { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; }
+  .stat .number { font-size: 28px; font-weight: 600; color: var(--accent-2); letter-spacing: -0.5px; }
+  .stat .label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 4px; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px;
+    background: var(--bg-2); margin-bottom: 8px; font-size: 14px; border: 1px solid var(--border); }
+  .row:last-child { margin-bottom: 0; }
+  .row .left { flex: 1; }
+  .row .right { color: var(--text-dim); font-size: 12px; }
+  .chip { display: inline-block; padding: 2px 8px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 999px; font-size: 11px; color: var(--text-dim); margin-right: 4px; }
+  .chip.accent { color: var(--accent); border-color: var(--accent); }
+  .chip.warn { color: var(--warn); border-color: var(--warn); }
+  .chip.good { color: var(--green); border-color: var(--green); }
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content:""; position: absolute; left: 11px; top: 6px; bottom: 6px;
+    background: var(--border); width: 2px; border-radius: 1px; }
+  .timeline-item { position: relative; margin-bottom: 18px; }
+  .timeline-item::before { content:""; position: absolute; left: -28px; top: 6px;
+    width: 14px; height: 14px; background: var(--accent); border-radius: 50%;
+    border: 3px solid var(--bg); }
+  .timeline-item .date { font-size: 12px; color: var(--text-dim); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .timeline-item .title { font-weight: 600; font-size: 14px; }
+  .timeline-item .subtitle { font-size: 13px; color: var(--text-dim); }
+  input, textarea, select { background: var(--bg-2); color: var(--text); border: 1px solid var(--border);
+    padding: 10px 12px; border-radius: 8px; font-size: 14px; font-family: inherit; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+  button.primary { background: var(--accent); color: white; border: none; padding: 10px 18px;
+    border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  button.primary:hover { background: #6949ff; }
+  button.primary:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+  button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border);
+    padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+  button.secondary:hover { border-color: var(--accent); color: var(--accent); }
+  label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
+  .form-row { margin-bottom: 14px; }
+  .chat { height: 520px; display: flex; flex-direction: column; }
+  .chat .messages { flex: 1; overflow-y: auto; padding: 16px; background: var(--bg-2);
+    border-radius: var(--radius-sm); border: 1px solid var(--border); }
+  .chat .msg { margin-bottom: 14px; max-width: 80%; }
+  .chat .msg.user { margin-left: auto; }
+  .chat .msg .bubble { padding: 10px 14px; border-radius: var(--radius-sm); font-size: 14px; }
+  .chat .msg.user .bubble { background: var(--accent); color: white; }
+  .chat .msg.assistant .bubble { background: var(--panel); border: 1px solid var(--border); }
+  .chat .msg.system .bubble { background: transparent; color: var(--text-dim); font-size: 12px; padding: 4px 0; }
+  .chat .input { display: flex; gap: 10px; margin-top: 12px; }
+  .chat .input textarea { flex: 1; resize: none; min-height: 44px; max-height: 140px; }
+  .empty { text-align: center; padding: 60px 24px; color: var(--text-dim); }
+  .empty h3 { color: var(--text); font-weight: 500; margin: 0 0 6px; }
+  .empty p { font-size: 14px; }
+  .loading { color: var(--text-dim); font-size: 13px; padding: 8px 0; }
+  .progress { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress > div { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
+  .pill-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  details summary { cursor: pointer; color: var(--text-dim); font-size: 13px; padding: 8px 0; }
+  details[open] summary { color: var(--accent); }
+  pre.code { background: var(--bg); padding: 10px; border-radius: 6px; font-size: 12px;
+    overflow-x: auto; color: var(--text-dim); border: 1px solid var(--border); }
+  .err { color: var(--error); font-size: 13px; padding: 8px 12px; background: rgba(255,107,107,0.08);
+    border: 1px solid rgba(255,107,107,0.25); border-radius: 6px; margin: 8px 0; }
+  .ok { color: var(--green); font-size: 13px; padding: 8px 12px; background: rgba(76,217,198,0.06);
+    border: 1px solid rgba(76,217,198,0.25); border-radius: 6px; margin: 8px 0; }
+
+  @keyframes indet { 0% { left:-30%; } 100% { left:100%; } }
+</style></head><body>
+<header>
+  <div class="brand"><span class="dot"></span> <h1>MemoryVerse AI</h1></div>
+  <div class="user">
+    <span id="userLabel"></span>
+    <button id="logoutBtn" style="display:none;">Sign out</button>
+  </div>
+</header>
+<nav id="nav" style="display:none;">
+  <button data-tab="dashboard" class="active">Dashboard</button>
+  <button data-tab="upload">Upload</button>
+  <button data-tab="timeline">Timeline</button>
+  <button data-tab="chat">Chat</button>
+  <button data-tab="explorer">Explorer</button>
+</nav>
+<main>
+  <section id="onboarding" style="display:none;"></section>
+  <section id="dashboard" class="tab-panel" style="display:none;">
+    <div class="panel">
+      <h2>Your Digital Identity</h2>
+      <p class="sub">A summary of what MemoryVerse has learned about you from your documents.</p>
+      <div class="stats" id="stats">
+        <div class="stat"><div class="number" id="stat_docs">-</div><div class="label">Documents</div></div>
+        <div class="stat"><div class="number" id="stat_skills">-</div><div class="label">Skills</div></div>
+        <div class="stat"><div class="number" id="stat_events">-</div><div class="label">Timeline events</div></div>
+        <div class="stat"><div class="number" id="stat_projects">-</div><div class="label">Projects</div></div>
+      </div>
+    </div>
+    <div class="panel"><h2>Recent documents</h2><div id="recent_docs"><div class="loading">loading...</div></div></div>
+    <div class="panel"><h2>Top skills</h2><div id="top_skills" class="pill-row"><div class="loading">loading...</div></div></div>
+  </section>
+  <section id="upload" class="tab-panel" style="display:none;">
+    <div class="panel">
+      <h2>Upload Center</h2>
+      <p class="sub">Add any kind of document — PDF, DOCX, PPTX, TXT, MD, images, CSV/JSON. The parser extracts text; then run entity extraction below.</p>
+      <div class="form-row"><label>Document title</label><input id="up_title" placeholder="Resume 2024.pdf"></div>
+      <div class="form-row"><label>File</label><input id="up_file" type="file" accept=".pdf,.docx,.doc,.odt,.rtf,.pptx,.ppt,.txt,.md,.csv,.json,.html,.xml,.yml,.yaml,.jpg,.jpeg,.png,.gif,.webp,.svg,.bmp,.heic,.tif,.tiff"></div>
+      <div id="up_progress" style="display:none;margin:12px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-dim);">
+          <span id="up_progress_label"></span><span id="up_progress_bar_pct"></span>
+        </div>
+        <div style="position:relative;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:6px;">
+          <div id="up_progress_bar" style="height:100%;width:0%;background:var(--accent);transition:width 0.2s;"></div>
+        </div>
+      </div>
+      <div id="up_status"></div>
+      <button class="primary" id="up_submit">Upload</button>
+      <p class="sub" style="margin-top:14px;">Tip: large files may take 30–60 seconds to fully upload and parse. The progress bar above keeps you informed — if you don't see "Uploaded" within two minutes, click Upload again.</p>
+    </div>
+    <div class="panel" id="extract_panel" style="display:none;">
+      <h2>Run extraction</h2>
+      <p class="sub">Once the document is parsed, run extraction to populate skills, projects, and the timeline.</p>
+      <div class="form-row"><label>Document</label><select id="ex_doc"></select></div>
+      <div class="progress" id="ex_progress" style="display:none;"><div></div></div>
+      <div id="ex_status"></div>
+      <button class="primary" id="ex_submit">Run extraction</button>
+      <details style="margin-top:14px;"><summary>Show output schema</summary>
+        <pre class="code">{ "skills":[...], "projects":[...], "certifications":[...], "internships":[...], "education":[...], "organizations":[...], "achievements":[...] }</pre>
+      </details>
+    </div>
+  </section>
+  <section id="timeline" class="tab-panel" style="display:none;">
+    <div class="panel">
+      <h2>Digital Journey Timeline</h2>
+      <p class="sub">Education, internships, projects, certifications, and achievements, ordered chronologically.</p>
+      <div id="timeline_list" class="timeline"><div class="loading">loading...</div></div>
+    </div>
+  </section>
+  <section id="chat" class="tab-panel" style="display:none;">
+    <div class="panel">
+      <h2>Ask MemoryVerse</h2>
+      <p class="sub">Searchable retrieval over your documents, with structured knowledge from your records.</p>
+      <div class="chat">
+        <div class="messages" id="chat_messages">
+          <div class="msg system"><div class="bubble">Ask anything about your skills, projects, or career.</div></div>
+        </div>
+        <div class="input">
+          <textarea id="chat_input" placeholder="e.g. What projects am I most proud of?"></textarea>
+          <button class="primary" id="chat_send">Send</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="explorer" class="tab-panel" style="display:none;">
+    <div class="panel">
+      <h2>All records</h2>
+      <p class="sub">Browse every entity that MemoryVerse has extracted.</p>
+      <div class="pill-row" id="explorer_tabs">
+        <button class="secondary active" data-tab="skills">Skills</button>
+        <button class="secondary" data-tab="projects">Projects</button>
+        <button class="secondary" data-tab="internships">Internships</button>
+        <button class="secondary" data-tab="education">Education</button>
+        <button class="secondary" data-tab="certifications">Certifications</button>
+        <button class="secondary" data-tab="organizations">Organizations</button>
+        <button class="secondary" data-tab="achievements">Achievements</button>
+        <button class="secondary" data-tab="documents">Documents</button>
+      </div>
+      <div id="explorer_body" style="margin-top:14px;"></div>
+    </div>
+  </section>
+</main>
+<script>
+(function () {
+  var cfg = window.__LEMMA_CONFIG__ || {};
+  var base = (cfg.apiUrl || window.location.origin).replace(/\/$/, "");
+  var s = document.createElement("script");
+  s.src = base + "/public/sdk/lemma-client.js";
+  s.onload = boot;
+  s.onerror = function () { showOnboarding("Could not reach Lemma API at " + base + ".", ""); };
+  document.head.appendChild(s);
+
+  var TOKEN_KEY = "mv_session_token";
+  var tab = "dashboard";
+  var explorerTab = "skills";
+  var client = null, profile = null;
+
+  async function boot() {
+    try { client = new window.LemmaClient.LemmaClient({ apiUrl: base }); }
+    catch (e) { return showOnboarding("SDK init failed: " + e.message, ""); }
+    try { var state = await client.initialize(); if (state.status !== "authenticated") { client.auth.redirectToAuth(); return; } } catch (e) { return showOnboarding("Initialization failed: " + e.message, ""); }
+    var tok = localStorage.getItem(TOKEN_KEY);
+    if (tok) {
+      try {
+        var res = await callFunction("auth_get_session", { session_token: tok });
+        if (res && res.valid) { profile = res; return enterApp(); }
+      } catch (e) {}
+      localStorage.removeItem(TOKEN_KEY);
+    }
+    await tryExistingProfile();
+  }
+
+  async function tryExistingProfile() {
+    try {
+      var resp = await client.records.list("profiles", { limit: 1 });
+      var items = resp.items || [];
+      if (items.length) showLogin(items[0].handle);
+      else showOnboarding("", "");
+    } catch (e) { showOnboarding("Could not load profiles: " + e.message, ""); }
+  }
+
+  function showOnboarding(err, handle) {
+    var sec = document.getElementById("onboarding");
+    sec.style.display = "block";
+    sec.innerHTML =
+      '<div class="panel" style="max-width: 540px; margin: 60px auto;">'
+      + '<h2>Welcome to MemoryVerse</h2>'
+      + '<p class="sub">Create an account to track your academic and professional journey.</p>'
+      + '<div class="form-row"><label>Handle</label><input id="ob_handle" placeholder="sahil" maxlength="60"></div>'
+      + '<div class="form-row"><label>Display name</label><input id="ob_display_name" placeholder="Sahil Bansode"></div>'
+      + '<div class="form-row"><label>Password (8+ chars)</label><input id="ob_password" type="password"></div>'
+      + '<div class="form-row"><label>Bio (optional)</label><textarea id="ob_bio" rows="2"></textarea></div>'
+      + '<div id="ob_err">' + (err ? '<div class="err">' + esc(err) + '</div>' : '') + '</div>'
+      + '<div id="auth_progress" style="display:none;margin:14px 0;">'
+      +     '<div style="display:flex;justify-content:space-between;align-items:center;'
+      +             'font-size:13px;color:var(--text-dim);">'
+      +         '<span id="auth_progress_label"></span>'
+      +         '<span id="auth_progress_secs"></span>'
+      +     '</div>'
+      +     '<div style="position:relative;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:6px;">'
+      +         '<div id="auth_progress_dot" style="position:absolute;top:0;left:0;height:100%;width:30%;background:var(--accent);animation:indet 1.4s infinite;"></div>'
+      +     '</div></div>'
+      + '<button class="primary" id="ob_submit">Create account</button></div>';
+    document.getElementById("ob_submit").onclick = async function () {
+      var h = document.getElementById("ob_handle").value.trim();
+      var d = document.getElementById("ob_display_name").value.trim();
+      var p = document.getElementById("ob_password").value;
+      var b = document.getElementById("ob_bio").value;
+      if (!h || !d || !p) return showOnboarding("Handle, name, and password required.", "");
+      var btn = document.getElementById("ob_submit");
+      btn.disabled = true; btn.textContent = "Creating…";
+      try {
+        var res = await withProgress(
+          [
+            "Setting up your account…  ",
+            "Almost done — finalizing your profile…  ",
+            "Still working — your account is being created…  ",
+            "Backend is warming up, hang tight…  "
+          ],
+          function () {
+            return callFunction("auth_setup_profile", {
+              handle: h, display_name: d, password: p, bio: b,
+            });
+          }
+        );
+        localStorage.setItem(TOKEN_KEY, res.session_token);
+        profile = { handle: res.handle, profile_id: res.profile_id };
+        enterApp();
+      } catch (e) {
+        showOnboarding(
+          (e && e.message ? e.message : "Sign up failed") +
+          " — click below to retry.",
+          ""
+        );
+      } finally {
+        btn.disabled = false; btn.textContent = "Create account";
+      }
+    };
+  }
+  function showLogin(handle) {
+    var sec = document.getElementById("onboarding");
+    sec.style.display = "block";
+    sec.innerHTML = '<div class="panel" style="max-width: 500px; margin: 60px auto;">'
+      + '<h2>Sign in</h2><p class="sub">Welcome back, <b>@' + esc(handle) + '</b>.</p>'
+      + '<div class="form-row"><label>Password</label><input id="li_password" type="password" autofocus></div>'
+      + '<div id="li_err"></div>'
+      + '<div id="auth_progress" style="display:none;margin:14px 0;">'
+      +     '<div style="display:flex;justify-content:space-between;align-items:center;'
+      +             'font-size:13px;color:var(--text-dim);">'
+      +         '<span id="auth_progress_label"></span>'
+      +         '<span id="auth_progress_secs"></span>'
+      +     '</div>'
+      +     '<div style="position:relative;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:6px;">'
+      +         '<div id="auth_progress_dot" style="position:absolute;top:0;left:0;height:100%;width:30%;background:var(--accent);animation:indet 1.4s infinite;"></div>'
+      +     '</div></div>'
+      + '<button class="primary" id="li_submit">Sign in</button></div>';
+    document.getElementById("li_submit").onclick = async function () {
+      var p = document.getElementById("li_password").value;
+      var btn = document.getElementById("li_submit");
+      btn.disabled = true; btn.textContent = "Signing in…";
+      try {
+        var res = await withProgress(
+          ["Signing in…  ", "Verifying password…  ", "Almost there…  ", "Backend warming up, hang tight…  "],
+          function () {
+            return callFunction("auth_login", { handle: handle, password: p });
+          }
+        );
+        localStorage.setItem(TOKEN_KEY, res.session_token);
+        profile = { handle: res.handle, profile_id: res.profile_id };
+        enterApp();
+      } catch (e) {
+        document.getElementById("li_err").innerHTML =
+          "<div class='err'>" + esc(e.message || "Sign in failed") +
+          " — click Sign in to try again.</div>";
+      } finally {
+        btn.disabled = false; btn.textContent = "Sign in";
+      }
+    };
+  }
+
+  function enterApp() {
+    document.getElementById("onboarding").style.display = "none";
+    document.getElementById("nav").style.display = "flex";
+    document.getElementById("userLabel").textContent = "@" + (profile.handle || "user");
+    document.getElementById("logoutBtn").style.display = "inline-block";
+    document.getElementById("logoutBtn").onclick = async function () {
+      try { await callFunction("auth_logout", { session_token: localStorage.getItem(TOKEN_KEY) }); } catch (e) {}
+      localStorage.removeItem(TOKEN_KEY); location.reload();
+    };
+    showTab(tab); refreshAll();
+    setInterval(refreshDashboard, 30000);
+  }
+
+  function showTab(t) {
+    tab = t;
+    document.querySelectorAll("nav button").forEach(function (b) { b.classList.toggle("active", b.dataset.tab === t); });
+    document.querySelectorAll(".tab-panel").forEach(function (p) { p.style.display = (p.id === t) ? "block" : "none"; });
+    if (t === "dashboard") refreshDashboard();
+    else if (t === "timeline") refreshTimeline();
+    else if (t === "chat") refreshChat();
+    else if (t === "upload") refreshUploadTab();
+    else if (t === "explorer") refreshExplorer();
+  }
+  document.querySelectorAll("nav button").forEach(function (b) { b.onclick = function () { showTab(b.dataset.tab); }; });
+  document.querySelectorAll("#explorer_tabs button").forEach(function (b) {
+    b.onclick = function () {
+      explorerTab = b.dataset.tab;
+      document.querySelectorAll("#explorer_tabs button").forEach(function (x) { x.classList.toggle("active", x === b); });
+      refreshExplorer();
+    };
+  });
+
+  // Live progress recorder — gives the user a "still working" signal during the
+  // 15–60s signature runtime on this pod (each backend record create takes ~5–10s,
+  // and the function harness cold-starts so first runs are worst).
+  async function withProgress(steps, fn) {
+    var bar = document.getElementById("auth_progress");
+    var lbl = document.getElementById("auth_progress_label");
+    var secs = document.getElementById("auth_progress_secs");
+    if (bar) bar.style.display = "block";
+    var i = 0;
+    if (lbl) lbl.textContent = (steps && steps.length) ? steps[0] : "Working…";
+    if (secs) secs.textContent = "0s";
+    var ticker = setInterval(function () {
+      i++;
+      if (secs) secs.textContent = i + "s";
+      if (steps && steps.length && lbl) {
+        var idx = Math.min(Math.floor(i / 10), steps.length - 1);
+        lbl.textContent = steps[idx];
+      }
+    }, 1000);
+    try { return await fn(); }
+    finally { clearInterval(ticker); if (bar) bar.style.display = "none"; }
+  }
+
+    async function callFunction(name, payload, options) {
+    options = options || {};
+    options.timeoutMs = options.timeoutMs || 180000;
+    if (typeof client.podId !== "string") throw new Error("SDK is not authenticated (podId unavailable). Reload and try again.");
+    var sec = Math.ceil(options.timeoutMs / 1000);
+    function runOnce() {
+      var opts = sec > 60 ? { timeout: sec, headers: { "X-Client-Timeout-Ms": String(options.timeoutMs) } } : { timeout: sec };
+      return client.functions.run(name, { input: payload || {} }, opts).then(function (run) {
+        if (!run) throw new Error("No response from " + name);
+        if (run.status !== "COMPLETED") {
+          var msg = (run.error || run.logs || ("Run " + run.status)).split("\n")[0].trim();
+          if (!msg) msg = "Function returned status " + run.status;
+          throw new Error(msg);
+        }
+        return run.output_data || {};
+      });
+    }
+    try {
+      return await runOnce();
+    } catch (e) {
+      var m = (e && e.message || "").toLowerCase();
+      var retryable = /timeout|aborted|network|failed to fetch|did not complete|status pending/.test(m);
+      if (retryable) { try { return await runOnce(); } catch (e2) { throw e2; } }
+      throw e;
+    }
+  }
+  async function callAgent(name, message, options) {
+    options = options || {};
+    options.timeoutMs = options.timeoutMs || 120000;
+    options.pollMs = options.pollMs || 1500;
+
+    var conv = await client.agents.run(name, message, options);
+    if (!conv) throw new Error("No response from " + name);
+    var convId = (conv && (conv.id || conv.conversation_id)) || null;
+
+    if (!convId) {
+      var direct = conv.last_message || conv.lastMessage || conv.message;
+      var directTxt = direct ? (typeof direct === "string" ? direct : (direct.text || direct.content || "")) : "";
+      return { final: directTxt, output: { text: directTxt }, raw: conv };
+    }
+
+    var deadline = Date.now() + options.timeoutMs;
+    var lastAnswer = "";
+    var lastMs = -1;
+    var stablePolls = 0;
+    while (Date.now() < deadline) {
+      try {
+        var ms = await client.conversations.messages.list(convId, { limit: 30 });
+        var items = (ms && (ms.items || ms)) || [];
+        for (var i = 0; i < items.length; i++) {
+          var m = items[i];
+          if (!m) continue;
+          if (m.role === "assistant" || m.role === "AGENT") {
+            var content = m.content;
+            var txt = "";
+            if (typeof content === "string") txt = content;
+            else if (Array.isArray(content)) txt = content.map(function (c) { return c && (c.text || c.content || (typeof c === "string" ? c : "")); }).join("");
+            else if (content && typeof content === "object") txt = content.text || content.content || JSON.stringify(content);
+            else txt = m.text || "";
+            if (txt && txt.trim()) lastAnswer = txt;
+          }
+        }
+        if (items.length === lastMs) stablePolls++;
+        else { stablePolls = 0; lastMs = items.length; }
+        if (lastAnswer && stablePolls >= 2) break;
+      } catch (e) { console.warn("messages.list poll failed:", e && e.message); }
+      await new Promise(function (r) { setTimeout(r, options.pollMs); });
+    }
+    if (!lastAnswer) throw new Error("Agent " + name + " did not reply within " + Math.round(options.timeoutMs / 1000) + "s");
+
+    var extraction = null;
+    var jsonMatch = lastAnswer.match(/\{[\s\S]*?\}[\s]*$/);
+    if (jsonMatch) { try { extraction = JSON.parse(jsonMatch[0]); } catch (e) {} }
+    var out = { text: lastAnswer, answer: lastAnswer };
+    if (extraction) out.extraction = extraction;
+    return { final: lastAnswer, output: out, raw: conv };
+  }
+
+  async function refreshAll() {
+    try { await refreshDashboard(); } catch (e) { console.warn(e); }
+  }
+  async function refreshDashboard() {
+    try {
+      var counts = await client.datastore.query(
+        "select "
+        + "(select count(*) as v from " + (cfg.prefix || "") + "documents) docs, "
+        + "(select count(*) as v from " + (cfg.prefix || "") + "skills) skills, "
+        + "(select count(*) as v from " + (cfg.prefix || "") + "projects) projects, "
+        + "(select count(*) as v from " + (cfg.prefix || "") + "timeline_events) events"
+      ).catch(function() { return { items: [{ docs:0,skills:0,projects:0,events:0 }] }; });
+      var c = counts.items && counts.items[0] || counts[0] || { docs:0, skills:0, projects:0, events:0 };
+      setText("stat_docs", c.docs || 0);
+      setText("stat_skills", c.skills || 0);
+      setText("stat_events", c.events || 0);
+      setText("stat_projects", c.projects || 0);
+      var docs = await client.records.list("documents", { limit: 8 });
+      renderDocsList(docs.items || []);
+      var skills = await client.records.list("skills", { limit: 30 });
+      renderSkills(skills.items || []);
+    } catch (e) { console.warn(e); }
+  }
+  function renderDocsList(docs) {
+    var host = document.getElementById("recent_docs");
+    if (!docs.length) { host.innerHTML = "<div class='empty'><h3>No documents yet</h3><p>Upload a resume or transcript to begin.</p></div>"; return; }
+    host.innerHTML = docs.map(function (d) {
+      var chips = "<span class='chip'>" + esc(d.source_type) + "</span>"
+        + (d.status ? "<span class='chip " + (d.status === 'extracted' ? 'good' : (d.status === 'failed' ? 'warn' : '')) + "'>" + esc(d.status) + "</span>" : "");
+      return '<div class="row"><div class="left"><b>' + esc(d.title) + '</b> ' + chips
+        + '<div style="color:var(--text-dim);font-size:12px;margin-top:2px;">'
+        + (d.size_bytes ? Math.round(d.size_bytes/1024) + ' KB' : '')
+        + (d.page_count ? ' · ' + d.page_count + ' pages' : '')
+        + (d.text_length ? ' · ' + d.text_length + ' chars' : '')
+        + '</div></div><div class="right">' + relTime(d.uploaded_at) + '</div></div>';
+    }).join("");
+  }
+  function renderSkills(skills) {
+    var host = document.getElementById("top_skills");
+    if (!skills.length) { host.innerHTML = "<span class='chip'>no skills yet</span>"; return; }
+    host.innerHTML = skills.map(function (s) {
+      return '<span class="chip accent" title="' + esc(s.category || '') + '">' + esc(s.name) + '</span>';
+    }).join("");
+  }
+
+  async function refreshUploadTab() {
+    try {
+      var docs = (await client.records.list("documents", { limit: 40 })).items || [];
+      var sel = document.getElementById("ex_doc");
+      if (sel) sel.innerHTML = docs.map(function (d) {
+        var s = d.status || "upload_pending";
+        return '<option value="' + esc(d.id) + '" data-title="' + esc(d.title) + '">' + esc(d.title) + ' [' + s + ']</option>';
+      }).join("");
+      var parsed = docs.filter(function (d) { return d.status && d.status !== "upload_pending"; });
+      document.getElementById("extract_panel").style.display = parsed.length ? "block" : "none";
+    } catch (e) { console.warn(e); }
+  }
+    // Pre-create /me/uploads (idempotent — swallows 409 conflicts). Runs once per page.
+  async function ensureUploadsFolder() {
+    if (ensureUploadsFolder._done) return ensureUploadsFolder._res;
+    var p = (async function () {
+      var u = window.__LEMMA_CONFIG__ && window.__LEMMA_CONFIG__.userId;
+      // Always use the user-scoped namespace: /fe47498f-.../uploads is the canonical path.
+      // We also accept the /me/uploads alias.
+      var paths = ["/me/uploads"];
+      for (var s of paths) {
+        try { await client.files.folder.create("uploads", { directoryPath: getParentPath(s) }); }
+        catch (e) { /* 409 CONFLICT is fine */ }
+      }
+    })();
+    ensureUploadsFolder._done = true; ensureUploadsFolder._res = p; return p;
+  }
+  function getParentPath(p) {
+    p = (p || "/").replace(/\/+$/, "");
+    var i = p.lastIndexOf("/");
+    return i <= 0 ? "/" : p.slice(0, i);
+  }
+  function getBaseNamePath(p) {
+    p = (p || "/").replace(/\/+$/, "");
+    var i = p.lastIndexOf("/");
+    return { parent: i < 0 ? "/" : (i === 0 ? "/" : p.slice(0, i)), name: p.slice(i + 1) };
+  }
+
+  // Wrap client.files.upload with XHR so we get real upload progress events.
+  function uploadWithProgress(file, opts, onProgress) {
+    return new Promise(function (resolve, reject) {
+      var apiUrl = (window.__LEMMA_CONFIG__ && window.__LEMMA_CONFIG__.apiUrl) || window.location.origin;
+      var xhr = new XMLHttpRequest();
+      /* SDK shape: client.podId is a GETTER (property), not a method. Calling it with () throws "is not a function". */
+      var podIdValue = client.podId;
+      xhr.open("POST", apiUrl.replace(/\/$/, "") + "/pods/" + podIdValue + "/datastore/files");
+      var fd = new FormData();
+      fd.append("data", file);
+      fd.append("name", opts.name || file.name);
+      if (opts.directoryPath) fd.append("directory_path", opts.directoryPath.replace(/^\/+/, "").endsWith("/") ? opts.directoryPath : opts.directoryPath + "/");
+      fd.append("search_enabled", "true");
+      xhr.upload.onprogress = function (ev) {
+        if (ev.lengthComputable && onProgress) onProgress(Math.round((ev.loaded / ev.total) * 100));
+      };
+      xhr.onload = function () {
+        var body = null;
+        try { body = JSON.parse(xhr.responseText); } catch (e) { body = null; }
+        if (xhr.status >= 200 && xhr.status < 300) { resolve(body || {}); }
+        else {
+          var msg = (body && (body.message || body.error || body.detail)) || ("Upload failed (HTTP " + xhr.status + ")");
+          reject(new Error(msg));
+        }
+      };
+      xhr.onerror = function () { reject(new Error("Network error during upload")); };
+      xhr.onabort = function () { reject(new Error("Upload aborted")); };
+      xhr.send(fd);
+    });
+  }
+
+  document.getElementById("up_submit").onclick = async function () {
+    var titleEl = document.getElementById("up_title");
+    var fileEl = document.getElementById("up_file");
+    var progEl = document.getElementById("up_progress");
+    var progLbl = document.getElementById("up_progress_label");
+    var progBar = document.getElementById("up_progress_bar");
+    var title = titleEl.value.trim();
+    var f = fileEl.files[0];
+    if (!title) return setStatus("up_status", "<div class='err'>Title required.</div>");
+    if (!f) return setStatus("up_status", "<div class='err'>Pick a file.</div>");
+    var ext = (f.name.split(".").pop() || "").toLowerCase();
+    // Any file is accepted. We classify so the parser/extractor knows how to handle it.
+    var sType = null;
+    if (ext === "pdf") sType = "pdf";
+    else if (ext === "docx" || ext === "doc" || ext === "odt" || ext === "rtf") sType = "docx";
+    else if (ext === "pptx" || ext === "ppt") sType = "pptx";
+    else if (ext === "txt" || ext === "md" || ext === "csv" || ext === "json" || ext === "html" || ext === "xml" || ext === "yaml" || ext === "yml") sType = "txt";
+    else if (["jpg","jpeg","png","gif","webp","svg","bmp","heic","heif","tiff","tif"].indexOf(ext) > -1) sType = "image";
+    else sType = "manual"; // unknown — store raw bytes, parser falls back to UTF-8 decode.
+
+    var btn = document.getElementById("up_submit");
+    btn.disabled = true; btn.textContent = "Uploading…";
+    progEl.style.display = "block";
+    progLbl.textContent = "Uploading bytes (0%)…";
+    progBar.style.width = "0%";
+    setStatus("up_status", "<div class='loading'>Uploading " + esc(f.name) + " — " + Math.round(f.size / 1024) + " KB…</div>");
+    try {
+      // Ensure /me/uploads exists as a real folder — file-upload API requires it.
+      await ensureUploadsFolder();
+      // XHR with real progress (the SDK's upload doesn't emit progress events).
+      var fp = await uploadWithProgress(f, { directoryPath: "/me/uploads", name: f.name }, function (pct) {
+        progLbl.textContent = "Uploading bytes (" + pct + "%)…";
+        progBar.style.width = pct + "%";
+      });
+      var storedPath = fp.path || ("/me/uploads/" + f.name);
+      progLbl.textContent = "Persisting document record…";
+
+      setStatus("up_status", "<div class='loading'>Persisting document record…</div>");
+      var res = await callFunction("upload_document", {
+        title: title, source_type: sType, file_path: storedPath,
+        mime_type: f.type || null, size_bytes: f.size || null,
+      });
+
+      setStatus("up_status", "<div class='loading'>Running parser (convert → extract text)…</div>");
+      progLbl.textContent = "Parsing…";
+      // Auto-parse if the function exists.
+      try { await callFunction("parse_document", { document_id: res.document_id }); }
+      catch (pe) { progLbl.textContent = "Parser unavailable: " + pe.message; }
+
+      var polls = 0;
+      var timer = setInterval(async function () {
+        polls++;
+        try {
+          var d = await client.records.get("documents", res.document_id);
+          var pct = Math.min(polls * 5, 95);
+          progBar.style.width = pct + "%";
+          progLbl.textContent = "Status: " + d.status + " · " + (d.text_length || 0) + " chars";
+          setStatus("up_status",
+            "<div class='loading'>Status: <b>" + esc(d.status) + "</b> · " +
+            (d.text_length || 0) + " chars · poll #" + polls + "</div>");
+          if (d.status === "extracted" || d.status === "parsed" || polls > 30) {
+            clearInterval(timer);
+            progBar.style.width = "100%";
+            await refreshUploadTab();
+            var msg = "Document parsed (" + (d.text_length || 0) + " chars). Open the extractor below to extract skills, projects, and timeline events.";
+            if (d.status === "extracted") msg = "✅ Document parsed and entities extracted automatically — see Dashboard, Timeline, and Explorer.";
+            setStatus("up_status", "<div class='ok'>" + msg + "</div>");
+          }
+        } catch (e) { /* poll quietly */ }
+      }, 2500);
+    } catch (e) {
+      setStatus("up_status", "<div class='err'>" + esc(e.message || String(e)) + " — try again.</div>");
+      progLbl.textContent = "Failed: " + (e.message || "upload error");
+    } finally {
+      btn.disabled = false; btn.textContent = "Upload";
+    }
+  };
+
+  document.getElementById("ex_submit").onclick = async function () {
+    var sel = document.getElementById("ex_doc");
+    var docId = sel.value;
+    var opt = sel.options[sel.selectedIndex];
+    var title = opt ? opt.dataset.title : "document";
+    var bar = document.getElementById("ex_progress"); bar.style.display = "block"; setProgress(10);
+    setStatus("ex_status", "<div class='loading'>Step 1/4: Loading document...</div>");
+    try {
+      var d = await client.records.get("documents", docId);
+      if ((d.status || '') === "upload_pending") {
+        setStatus("ex_status", "<div class='err'>Document not parsed yet.</div>"); return;
+      }
+      setProgress(30);
+      setStatus("ex_status", "<div class='loading'>Step 2/4: Extracting entities via memory_extractor...</div>");
+      var extract = await callAgent("memory_extractor", "Document title: " + title + "\n\nDocument text:\n" + (d.raw_text || "").slice(0, 9000));
+      setProgress(70);
+      var extraction = null;
+      // First try: a structured `.extraction` field on the reply.
+      if (extract.output && extract.output.extraction) extraction = extract.output.extraction;
+      // Fallback: the agent's text reply sometimes contains the JSON directly.
+      if (!extraction && extract.final) {
+        var match = extract.final.match(/\{[\s\S]*\}/);
+        if (match) { try { extraction = JSON.parse(match[0]); } catch (e) {} }
+      }
+      if (!extraction) throw new Error("Extractor returned no structured output");
+      setStatus("ex_status", "<div class='loading'>Step 3/4: Persisting " +
+        ((extraction.skills||[]).length) + " skills, " +
+        ((extraction.projects||[]).length) + " projects...</div>");
+      setProgress(85);
+      await callFunction("persist_extraction", { document_id: docId, extraction: extraction });
+      setProgress(95);
+      setStatus("ex_status", "<div class='loading'>Step 4/4: Rebuilding timeline...</div>");
+      await callFunction("regenerate_timeline", {}, { timeoutMs: 240000 });
+      setProgress(100);
+      setStatus("ex_status", "<div class='ok'>Done. " +
+        ((extraction.skills||[]).length) + " skills, " +
+        ((extraction.projects||[]).length) + " projects, " +
+        ((extraction.certifications||[]).length) + " certifications, " +
+        ((extraction.achievements||[]).length) + " achievements. Timeline refreshed.</div>");
+      refreshAll();
+    } catch (e) { setStatus("ex_status", "<div class='err'>" + esc(e.message) + "</div>"); }
+  };
+
+  async function refreshTimeline() {
+    try {
+      var items = (await client.records.list("timeline_events", { limit: 200 })).items || [];
+      items.sort(function (a, b) { return new Date(a.event_date || "9999-99-99") - new Date(b.event_date || "9999-99-99"); });
+      var host = document.getElementById("timeline_list");
+      if (!items.length) { host.innerHTML = "<div class='empty'><h3>No timeline events yet</h3><p>Upload a document and run extraction to populate this view.</p></div>"; return; }
+      host.innerHTML = items.map(function (e) {
+        var d = e.event_date ? new Date(e.event_date).toLocaleDateString("en-US", { year:"numeric", month:"short" }) : "-";
+        return '<div class="timeline-item">'
+          + '<div class="date">' + esc(d) + '</div>'
+          + '<div class="title">' + esc(e.title || '') + '</div>'
+          + '<div class="subtitle">' + esc(e.event_type || '') + '</div>'
+          + '</div>';
+      }).join("");
+    } catch (e) { console.warn(e); }
+  }
+
+  async function refreshChat() {
+    try {
+      // SDK (Lemma TS): the param is agent_name (snake_case), not `agent`.
+      var convs = await client.conversations.list({ agent_name: "memory_chat_agent", limit: 5 });
+      var arr = convs.items || convs || [];
+      if (!arr.length) return;
+      var c = arr[0];
+      var msgs = (await client.conversations.messages.list(c.id || c.conversation_id, { limit: 50 })).items || [];
+      var chat = document.getElementById("chat_messages");
+      chat.innerHTML = "";
+      msgs.forEach(function (m) {
+        var role = m.role || "system";
+        var text = (m.content && (m.content.text || (m.content[0] && m.content[0].text))) || m.text || "";
+        chat.insertAdjacentHTML("beforeend", '<div class="msg ' + role + '"><div class="bubble">' + esc(text) + '</div></div>');
+      });
+      chat.scrollTop = chat.scrollHeight;
+    } catch (e) { console.warn(e); }
+  }
+  document.getElementById("chat_send").onclick = async function () {
+    var input = document.getElementById("chat_input");
+    var text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    var chat = document.getElementById("chat_messages");
+    chat.insertAdjacentHTML("beforeend", '<div class="msg user"><div class="bubble">' + esc(text) + '</div></div>');
+    chat.insertAdjacentHTML("beforeend", '<div class="msg system"><div class="bubble">thinking...</div></div>');
+    chat.scrollTop = chat.scrollHeight;
+    try {
+      var resp = await callAgent("memory_chat_agent", text);
+      chat.lastChild.remove();
+      var reply = resp.final || "(no answer returned)";
+      reply = String(reply).replace(/\n/g, "<br>");
+      chat.insertAdjacentHTML("beforeend", '<div class="msg assistant"><div class="bubble">' + reply + '</div></div>');
+      chat.scrollTop = chat.scrollHeight;
+    } catch (e) {
+      chat.lastChild.remove();
+      chat.insertAdjacentHTML("beforeend", '<div class="msg system"><div class="bubble">' + esc(e.message) + '</div></div>');
+    }
+  };
+
+  async function refreshExplorer() {
+    var body = document.getElementById("explorer_body");
+    try {
+      var resp = await client.records.list(explorerTab, { limit: 60 });
+      var items = resp.items || [];
+      if (!items.length) { body.innerHTML = "<div class='empty'><h3>Nothing here yet</h3></div>"; return; }
+      body.innerHTML = items.map(function (r) {
+        var titleText = r.name || r.title || r.company || r.institution || r.id || "(unnamed)";
+        var sub = [r.category, r.proficiency, r.role, r.degree, r.field_of_study, r.membership_type, r.issuer]
+          .filter(Boolean).join(" · ");
+        return '<div class="row"><div class="left"><b>' + esc(titleText) + '</b>'
+          + (sub ? '<div style="font-size:12px;color:var(--text-dim);">' + esc(sub) + '</div>' : '')
+          + '</div><div class="right">' + esc(r.confidence ? Math.round(r.confidence*100) + '% conf' : '') + '</div></div>';
+      }).join("");
+    } catch (e) { body.innerHTML = "<div class='err'>" + esc(e.message) + "</div>"; }
+  }
+
+  function setText(id, val) { document.getElementById(id).textContent = String(val); }
+  function setStatus(id, html) { var n = document.getElementById(id); if (n) n.innerHTML = html || ""; }
+  function setProgress(p) { var n = document.getElementById("ex_progress"); if (n) n.firstElementChild.style.width = (p || 0) + "%"; }
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, function (m) { return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]; }); }
+  function relTime(iso) { if (!iso) return ""; var d = new Date(iso); var diff = (Date.now() - d.getTime())/1000; if (diff < 60) return "just now"; if (diff < 3600) return Math.floor(diff/60) + "m ago"; if (diff < 86400) return Math.floor(diff/3600) + "h ago"; return Math.floor(diff/86400) + "d ago"; }
+  document.getElementById("chat_input").addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); document.getElementById("chat_send").click(); } });
+})();
+</script>
+</body></html>

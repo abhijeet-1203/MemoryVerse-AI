@@ -1,0 +1,44 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "11ab19fbc9415541cdd92dc6f9d9719528481e9fc18433f82d1300e5546bd4ba",
+  "config": null,
+  "description": "Revoke a session token.",
+  "icon_url": null,
+  "name": "auth_logout",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "profiles",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "sessions",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "audit_logs",
+        "resource_type": "datastore_table"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}
